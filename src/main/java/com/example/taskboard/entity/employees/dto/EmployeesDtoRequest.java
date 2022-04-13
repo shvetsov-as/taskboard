@@ -1,18 +1,13 @@
 package com.example.taskboard.entity.employees.dto;
 
 import com.example.taskboard.entity.users.dto.UsersDtoRequest;
-import com.sun.istack.NotNull;
 
 public class EmployeesDtoRequest {
 
     private Long empId;
-    @NotNull
     private String empSurname;
-    @NotNull
     private String empName;
-    @NotNull
     private String empMidname;
-    @NotNull
     private UsersDtoRequest user;
 
     public EmployeesDtoRequest() {

@@ -1,4 +1,4 @@
-package com.example.taskboard.model.service.converter.request;
+package com.example.taskboard.model.service.premapCheck;
 
 import com.example.taskboard.entity.users.dto.UsersDtoRequest;
 import com.example.taskboard.model.dataexeptions.PasswordNotMatchRequirementsException;
@@ -13,12 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class DtoUsersPreConverterCheck {
+public class UsersParameterCheck {
     private final HashCheck hashCheck;
     private final HashGen hashGen;
     private final PasswdCheck passwdCheck;
 
-    public DtoUsersPreConverterCheck(HashCheck hashCheck, HashGen hashGen, PasswdCheck passwdCheck) {
+    public UsersParameterCheck(HashCheck hashCheck, HashGen hashGen, PasswdCheck passwdCheck) {
         this.hashCheck = hashCheck;
         this.hashGen = hashGen;
         this.passwdCheck = passwdCheck;

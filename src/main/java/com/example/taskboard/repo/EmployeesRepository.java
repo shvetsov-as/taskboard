@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface EmployeesRepository extends JpaRepository<Employees, Long> {
     Optional<Employees> findEmployeesByEmpSurnameAndEmpNameAndEmpMidname(String empSurname, String empName, String empMidname);
+    Employees findEmployeesByUser_UserId(Long userId);
     Page<Employees> findAll (Pageable pageable);
 }
