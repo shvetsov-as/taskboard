@@ -15,7 +15,7 @@ public class CustomUriComponentsBuilder {
     private final String uriPort;
     private final String apiVersion;
 
-    public CustomUriComponentsBuilder(@Value("${scheme.http}") String uriScheme,
+    public CustomUriComponentsBuilder(@Value("${server.scheme}") String uriScheme,
                                       @Value("${server.host}") String uriHost,
                                       @Value("${server.port}") String uriPort,
                                       @Value("${api-version.v1}") String apiVersion) {

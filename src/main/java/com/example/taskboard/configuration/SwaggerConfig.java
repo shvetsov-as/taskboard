@@ -5,14 +5,21 @@ import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.tags.Tag;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
+
+    @Value("${server.scheme}") String currentScheme;
+    @Value("${server.host}") String currentHost;
+    @Value("${server.port}") String currentPort;
 
     @Bean
     public OpenAPI openAPI() {
@@ -35,10 +42,19 @@ public class SwaggerConfig {
     @Bean
     public List<Server> getServers() {
         List<Server> serverList = new ArrayList<>();
-        serverList.add(new Server().url("http://localhost:8080/").description("working connection"));
-        serverList.add(new Server().url("http://localhost:8080/example1/").description("example_localhost2"));
-        serverList.add(new Server().url("http://localhost:8080/example2/").description("example_localhost3"));
+        String activeServerUrl = getServerUrl(currentScheme, currentHost, currentPort);
+        serverList.add(new Server().url(activeServerUrl).description("working connection"));
         return serverList;
+    }
+
+    @Bean
+    public String getServerUrl(String scheme, String host, String port) {
+        UriComponents builder = UriComponentsBuilder.newInstance()
+                .scheme(scheme)
+                .host(host)
+                .port(port)
+                .build();
+        return builder.toString();
     }
 
     @Bean

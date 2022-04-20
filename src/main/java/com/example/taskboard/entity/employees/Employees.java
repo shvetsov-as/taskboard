@@ -5,11 +5,13 @@ import com.example.taskboard.entity.users.Users;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -18,7 +20,15 @@ import javax.validation.constraints.NotNull;
 public class Employees {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(
+            name = "employees_sequence",
+            sequenceName = "employees_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "employees_sequence"
+    )
     @Column(name = "emp_id", nullable = false)
     @NotNull
     private Long empId;
@@ -35,7 +45,7 @@ public class Employees {
     @NotNull
     private String empMidname;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id_users")
     private Users user;
 

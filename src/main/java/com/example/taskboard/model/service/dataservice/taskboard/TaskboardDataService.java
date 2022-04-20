@@ -3,18 +3,18 @@ package com.example.taskboard.model.service.dataservice.taskboard;
 import com.example.taskboard.entity.taskboard.Taskboard;
 import com.example.taskboard.entity.taskboard.dto.TaskboardDtoRequest;
 import com.example.taskboard.entity.taskboard.dto.TaskboardDtoShortResponse;
+import com.example.taskboard.entity.taskboard.mapper.TaskboardMapper;
+import com.example.taskboard.entity.taskboard.mapper.TaskboardShortMapper;
 import com.example.taskboard.model.dataexeptions.DataNotFoundException;
 import com.example.taskboard.model.dataexeptions.ElementNotFoundException;
 import com.example.taskboard.model.dataexeptions.TaskboardAlreadyExistsException;
 import com.example.taskboard.model.dtoPageBuilder.DtoPage;
 import com.example.taskboard.model.dtoPageBuilder.DtoPageBuilder;
-import com.example.taskboard.model.service.converter.request.DtoTaskboardConverter;
-import com.example.taskboard.model.service.converter.response.TaskboardConverter;
-import com.example.taskboard.model.service.converter.response.TaskboardShortConverter;
 import com.example.taskboard.repo.TaskboardRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,28 +23,30 @@ import java.util.Optional;
 public class TaskboardDataService implements ITaskboardDataService {
 
     private final TaskboardRepository taskboardRepository;
-    private final TaskboardConverter taskboardConverter;
-    private final DtoTaskboardConverter dtoTaskboardConverter;
-    private final TaskboardShortConverter taskboardShortConverter;
+    private final TaskboardMapper taskboardMapper;
+    private final TaskboardShortMapper taskboardShortMapper;
 
-    public TaskboardDataService(TaskboardRepository taskboardRepository, TaskboardConverter taskboardConverter, DtoTaskboardConverter dtoTaskboardConverter, TaskboardShortConverter taskboardShortConverter) {
+    public TaskboardDataService(TaskboardRepository taskboardRepository,
+                                TaskboardShortMapper taskboardShortMapper,
+                                TaskboardMapper taskboardMapper) {
         this.taskboardRepository = taskboardRepository;
-        this.taskboardConverter = taskboardConverter;
-        this.dtoTaskboardConverter = dtoTaskboardConverter;
-        this.taskboardShortConverter = taskboardShortConverter;
+        this.taskboardShortMapper = taskboardShortMapper;
+        this.taskboardMapper = taskboardMapper;
     }
 
     public List<TaskboardDtoShortResponse> findAll() {
         List<Taskboard> taskboardList = taskboardRepository.findAll();
         if (taskboardList.size() == 0) throw new DataNotFoundException();
-        return taskboardShortConverter.convertToDto(taskboardList);
+        return taskboardShortMapper.taskboardListToTaskboardDtoShortResponseList(taskboardList);
     }
 
     @Override
     public DtoPage<TaskboardDtoShortResponse> findAllPageable(Pageable pageable) {
         Page<Taskboard> taskboardPage = taskboardRepository.findAll(pageable);
         if (taskboardPage.getContent().size() == 0) throw new DataNotFoundException();
-        List<TaskboardDtoShortResponse> taskboardDtoShortResponseList = taskboardShortConverter.convertToDto(taskboardPage.getContent());
+        List<TaskboardDtoShortResponse> taskboardDtoShortResponseList =
+                taskboardShortMapper.taskboardListToTaskboardDtoShortResponseList(taskboardPage.getContent());
+
         return new DtoPageBuilder<TaskboardDtoShortResponse>()
                 .setContent(taskboardDtoShortResponseList)
                 .setTotalPages(taskboardPage.getTotalPages())
@@ -55,7 +57,7 @@ public class TaskboardDataService implements ITaskboardDataService {
     @Override
     public TaskboardDtoShortResponse findById(Long id) {
         Optional<Taskboard> taskboard = taskboardRepository.findById(id);
-        return taskboardShortConverter.convertToDto(taskboard.orElseThrow(() -> new ElementNotFoundException(id)));
+        return taskboardShortMapper.taskboardToTaskboardDtoShortResponse(taskboard.orElseThrow(() -> new ElementNotFoundException(id)));
     }
 
     @Override
@@ -66,19 +68,19 @@ public class TaskboardDataService implements ITaskboardDataService {
 
     @Override
     public Boolean deleteById(Long id) {
-        if (taskboardRepository.existsById(id)) {
+        if (!taskboardRepository.existsById(id)) throw new ElementNotFoundException(id);
             taskboardRepository.deleteById(id);
             return true;
-        } else throw new ElementNotFoundException(id);
     }
 
     @Override
+    @Transactional
     public TaskboardDtoShortResponse create(TaskboardDtoRequest taskboardDtoRequest) {
         List<Taskboard> taskboardList = taskboardRepository.findAll();
         if (taskboardList.size() != 0) {
             throw new TaskboardAlreadyExistsException(taskboardList.get(0).getTaskboardId());
         }
-        Taskboard taskboard = dtoTaskboardConverter.convertToEntity(taskboardDtoRequest);
+        Taskboard taskboard = taskboardMapper.taskboardDtoRequestToTaskboard(taskboardDtoRequest);
         taskboard = taskboardRepository.save(taskboard);
         return findById(taskboard.getTaskboardId());
     }
@@ -86,18 +88,23 @@ public class TaskboardDataService implements ITaskboardDataService {
     @Override
     public Boolean update(Long id, TaskboardDtoRequest taskboardDtoRequest) {
         Taskboard taskboard = findByIdNoConvert(id);
+
         if (taskboardDtoRequest.getTaskboardName() != null) {
             taskboard.setTaskboardName(taskboardDtoRequest.getTaskboardName());
         }
+
         if (taskboardDtoRequest.getProjectName() != null) {
             taskboard.setProjectName(taskboardDtoRequest.getProjectName());
         }
+
         if (taskboardDtoRequest.getProjectStartDate() != null) {
             taskboard.setProjectStartDate(taskboardDtoRequest.getProjectStartDate());
         }
+
         if (taskboardDtoRequest.getProjectStatus() != null) {
             taskboard.setProjectStatus(taskboardDtoRequest.getProjectStatus());
         }
+
         taskboardRepository.save(taskboard);
         return true;
     }

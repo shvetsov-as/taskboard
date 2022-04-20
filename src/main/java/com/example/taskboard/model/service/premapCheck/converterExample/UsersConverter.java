@@ -1,13 +1,12 @@
-package com.example.taskboard.model.service.converter.response;
+package com.example.taskboard.model.service.premapCheck.converterExample;
 
 import com.example.taskboard.entity.users.Users;
 import com.example.taskboard.entity.users.dto.UsersDtoResponse;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+//@Service
 public class UsersConverter {
 
     public UsersDtoResponse convertToDto (Users user){
