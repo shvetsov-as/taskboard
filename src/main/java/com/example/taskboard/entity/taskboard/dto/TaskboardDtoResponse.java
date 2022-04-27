@@ -6,10 +6,11 @@ import com.example.taskboard.entity.release.dto.ReleaseDtoResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class TaskboardDtoResponse {
 
-    private Long taskboardId;
+    private UUID taskboardId;
     private String taskboardName;
     private String projectName;
     private Date projectStartDate;
@@ -19,7 +20,7 @@ public class TaskboardDtoResponse {
     public TaskboardDtoResponse() {
     }
 
-    public TaskboardDtoResponse(Long taskboardId, String taskboardName, String projectName, Date projectStartDate,
+    public TaskboardDtoResponse(UUID taskboardId, String taskboardName, String projectName, Date projectStartDate,
                                 Status projectStatus) {
         this.taskboardId = taskboardId;
         this.taskboardName = taskboardName;
@@ -28,7 +29,7 @@ public class TaskboardDtoResponse {
         this.projectStatus = projectStatus;
     }
 
-    public TaskboardDtoResponse(Long taskboardId, String taskboardName, String projectName, Date projectStartDate,
+    public TaskboardDtoResponse(UUID taskboardId, String taskboardName, String projectName, Date projectStartDate,
                                 Status projectStatus, List<ReleaseDtoResponse> listRelease) {
         this.taskboardId = taskboardId;
         this.taskboardName = taskboardName;
@@ -38,11 +39,11 @@ public class TaskboardDtoResponse {
         this.listRelease = listRelease;
     }
 
-    public Long getTaskboardId() {
+    public UUID getTaskboardId() {
         return taskboardId;
     }
 
-    public void setTaskboardId(Long taskboardId) {
+    public void setTaskboardId(UUID taskboardId) {
         this.taskboardId = taskboardId;
     }
 

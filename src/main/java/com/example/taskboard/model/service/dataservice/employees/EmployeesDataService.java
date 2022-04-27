@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class EmployeesDataService implements IEmployeesDataService {
@@ -45,14 +46,14 @@ public class EmployeesDataService implements IEmployeesDataService {
     @Override
     public List<EmployeesDtoResponse> findAll() {
         List<Employees> employeesList = employeesRepository.findAll();
-        if (employeesList.size() == 0) throw new DataNotFoundException();
+        if (employeesList.isEmpty()) throw new DataNotFoundException();
         return employeesMapper.employeesListToEmployeesDtoResponseList(employeesList);
     }
 
     @Override
     public DtoPage<EmployeesDtoResponse> findAllPageable(Pageable pageable) {
         Page<Employees> employeesPage = employeesRepository.findAll(pageable);
-        if (employeesPage.getContent().size() == 0) throw new DataNotFoundException();
+        if (employeesPage.getContent().isEmpty()) throw new DataNotFoundException();
         List<EmployeesDtoResponse> employeesDtoResponseList = employeesMapper.employeesListToEmployeesDtoResponseList(employeesPage.getContent());
         return new DtoPageBuilder<EmployeesDtoResponse>()
                 .setContent(employeesDtoResponseList)
@@ -62,7 +63,7 @@ public class EmployeesDataService implements IEmployeesDataService {
     }
 
     @Override
-    public EmployeesDtoResponse findById(Long id) {
+    public EmployeesDtoResponse findById(UUID id) {
         Optional<Employees> employee = employeesRepository.findById(id);
         return employeesMapper.employeesToEmployeesDtoResponse(employee.orElseThrow(() -> new ElementNotFoundException(id)));
     }
@@ -74,37 +75,52 @@ public class EmployeesDataService implements IEmployeesDataService {
     }
 
     @Override
-    public Boolean deleteById(Long id) {
+    @Transactional
+    public Boolean deleteById(UUID id) {
         if (!employeesRepository.existsById(id)) throw new ElementNotFoundException(id);
         employeesRepository.deleteById(id);
         return true;
     }
 
     @Override
+    @Transactional
     public EmployeesDtoResponse create(EmployeesDtoRequest employeesDtoRequest) {
+
         Employees employee = employeesMapper.employeesDtoRequestToEmployees(employeesDtoRequest);
+
+        employee.setEmpId(UUID.randomUUID());
         employee = employeesRepository.save(employee);
-        if (findEmployeesByFullName(employee.getEmpSurname(), employee.getEmpName(), employee.getEmpMidname()) == null) {
-            throw new EmployeeNotCreatedException(employeesDtoRequest.getEmpSurname(), employeesDtoRequest.getEmpName(), employeesDtoRequest.getEmpMidname());
-        }
-        return findById(employee.getEmpId());
+
+        employee = employeesRepository.findById(employee.getEmpId()).orElseThrow(() -> new EmployeeNotCreatedException(
+                    employeesDtoRequest.getEmpSurname(), employeesDtoRequest.getEmpName(), employeesDtoRequest.getEmpMidname()));
+
+        return employeesMapper.employeesToEmployeesDtoResponse(employee);
     }
 
-    public EmployeesDtoResponse createEmpIfUserExist(Long userId, EmployeesDtoShortRequest employeesDtoShortRequest) {
-
+    @Override
+    @Transactional
+    public EmployeesDtoResponse createEmpIfUserExist(UUID userId, EmployeesDtoShortRequest employeesDtoShortRequest) {
         Employees employee = employeesShortMapper.employeesDtoShortRequestToEmployees(employeesDtoShortRequest);
 
         Users user = usersDataService.findByIdNoConvert(userId);
         employee.setUser(user);
+
+        employee.setEmpId(UUID.randomUUID());
         employee = employeesRepository.save(employee);
-        if (findEmployeesByFullName(employee.getEmpSurname(), employee.getEmpName(), employee.getEmpMidname()) == null) {
-            throw new EmployeeNotCreatedException(employeesDtoShortRequest.getEmpSurname(), employeesDtoShortRequest.getEmpName(), employeesDtoShortRequest.getEmpMidname());
-        }
-        return findById(employee.getEmpId());
+
+        employee = employeesRepository.findById(
+                employee.getEmpId()).orElseThrow(
+                        () -> new EmployeeNotCreatedException(
+                                employeesDtoShortRequest.getEmpSurname(),
+                                employeesDtoShortRequest.getEmpName(),
+                                employeesDtoShortRequest.getEmpMidname()));
+
+        return employeesMapper.employeesToEmployeesDtoResponse(employee);
     }
 
     @Override
-    public Boolean update(Long id, EmployeesDtoRequest employeesDtoRequest) {
+    @Transactional
+    public Boolean update(UUID id, EmployeesDtoRequest employeesDtoRequest) {
         Employees employee = findByIdNoConvert(id);
 
         if (employeesDtoRequest.getEmpSurname() != null) {
@@ -129,7 +145,7 @@ public class EmployeesDataService implements IEmployeesDataService {
 
     @Override
     @Transactional
-    public Boolean updateUser(Long empid, Long userId) {
+    public Boolean updateUser(UUID empid, UUID userId) {
 
         Employees employee = employeesRepository.findEmployeesByUser_UserId(userId);
         if (employee != null) {
@@ -144,7 +160,7 @@ public class EmployeesDataService implements IEmployeesDataService {
     }
 
     @Override
-    public Employees findByIdNoConvert(Long id) {
+    public Employees findByIdNoConvert(UUID id) {
         Optional<Employees> employee = employeesRepository.findById(id);
         return employee.orElseThrow(() -> new ElementNotFoundException(id));
     }

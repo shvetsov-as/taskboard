@@ -1,4 +1,4 @@
-package com.example.taskboard.model.service.premapCheck.converterExample;
+package com.example.taskboard.entity.converterExample;
 
 import com.example.taskboard.entity.employees.Employees;
 import com.example.taskboard.entity.employees.dto.EmployeesDtoResponse;

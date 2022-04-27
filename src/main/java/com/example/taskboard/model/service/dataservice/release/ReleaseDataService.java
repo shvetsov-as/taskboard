@@ -12,9 +12,11 @@ import com.example.taskboard.repo.ReleaseRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ReleaseDataService implements IReleaseDataService {
@@ -30,14 +32,14 @@ public class ReleaseDataService implements IReleaseDataService {
     @Override
     public List<ReleaseDtoResponse> findAll() {
         List<Release> releaseList = releaseRepository.findAll();
-        if (releaseList.size() == 0) throw new DataNotFoundException();
+        if (releaseList.isEmpty()) throw new DataNotFoundException();
         return releaseMapper.releaseListToReleaseDtoResponseList(releaseList);
     }
 
     @Override
     public DtoPage<ReleaseDtoResponse> findAllPageable(Pageable pageable) {
         Page<Release> releasePage = releaseRepository.findAll(pageable);
-        if (releasePage.getContent().size() == 0) throw new DataNotFoundException();
+        if (releasePage.getContent().isEmpty()) throw new DataNotFoundException();
         List<ReleaseDtoResponse> releaseDtoResponseList = releaseMapper.releaseListToReleaseDtoResponseList(releasePage.getContent());
         return new DtoPageBuilder<ReleaseDtoResponse>()
                 .setContent(releaseDtoResponseList)
@@ -47,13 +49,14 @@ public class ReleaseDataService implements IReleaseDataService {
     }
 
     @Override
-    public ReleaseDtoResponse findById(Long id) {
+    public ReleaseDtoResponse findById(UUID id) {
         Optional<Release> release = releaseRepository.findById(id);
         return releaseMapper.releaseToReleaseDtoResponse(release.orElseThrow(() -> new ElementNotFoundException(id)));
     }
 
     @Override
-    public Boolean deleteById(Long id) {
+    @Transactional
+    public Boolean deleteById(UUID id) {
         if (!releaseRepository.existsById(id)) throw new ElementNotFoundException(id);
             releaseRepository.deleteById(id);
             return true;
@@ -62,12 +65,16 @@ public class ReleaseDataService implements IReleaseDataService {
     @Override
     public ReleaseDtoResponse create(ReleaseDtoRequest releaseDtoRequest) {
         Release release = releaseMapper.releaseDtoRequestToRelease(releaseDtoRequest);
+
+        release.setRelId(UUID.randomUUID());
         release = releaseRepository.save(release);
+
         return findById(release.getRelId());
     }
 
     @Override
-    public Boolean update(Long id, ReleaseDtoRequest releaseDtoRequest) {
+    @Transactional
+    public Boolean update(UUID id, ReleaseDtoRequest releaseDtoRequest) {
         Release release = findByIdNoConvert(id);
 
         if(releaseDtoRequest.getRelVersion() != null){
@@ -87,7 +94,7 @@ public class ReleaseDataService implements IReleaseDataService {
     }
 
     @Override
-    public Release findByIdNoConvert(Long id) {
+    public Release findByIdNoConvert(UUID id) {
         Optional<Release> release = releaseRepository.findById(id);
         return release.orElseThrow(() -> new ElementNotFoundException(id));
     }

@@ -1,10 +1,11 @@
 package com.example.taskboard.entity.release.dto;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class ReleaseDtoResponse {
 
-    private Long relId;
+    private UUID relId;
     private Integer relVersion;
     private Date relDateFrom;
     private Date relDateTo;
@@ -12,18 +13,18 @@ public class ReleaseDtoResponse {
     public ReleaseDtoResponse() {
     }
 
-    public ReleaseDtoResponse(Long relId, Integer relVersion, Date relDateFrom, Date relDateTo) {
+    public ReleaseDtoResponse(UUID relId, Integer relVersion, Date relDateFrom, Date relDateTo) {
         this.relId = relId;
         this.relVersion = relVersion;
         this.relDateFrom = relDateFrom;
         this.relDateTo = relDateTo;
     }
 
-    public Long getRelId() {
+    public UUID getRelId() {
         return relId;
     }
 
-    public void setRelId(Long relId) {
+    public void setRelId(UUID relId) {
         this.relId = relId;
     }
 

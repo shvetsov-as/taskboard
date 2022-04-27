@@ -6,32 +6,35 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Entity
 @Table(name = "employees")
 public class Employees {
 
+//    @Id
+//    @SequenceGenerator(
+//            name = "employees_sequence",
+//            sequenceName = "employees_sequence",
+//            allocationSize = 1
+//    )
+//    @GeneratedValue(
+//            strategy = GenerationType.SEQUENCE,
+//            generator = "employees_sequence"
+//    )
+//    @Column(name = "emp_id", nullable = false)
+//    @NotNull
+//    private Long empId;
+
     @Id
-    @SequenceGenerator(
-            name = "employees_sequence",
-            sequenceName = "employees_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "employees_sequence"
-    )
     @Column(name = "emp_id", nullable = false)
     @NotNull
-    private Long empId;
+    private UUID empId;
 
     @Column(name = "emp_surname", nullable = false)
     @NotNull
@@ -65,8 +68,12 @@ public class Employees {
         this.empMidname = empMidname;
     }
 
-    public Long getEmpId() {
+    public UUID getEmpId() {
         return empId;
+    }
+
+    public void setEmpId(UUID empId) {
+        this.empId = empId;
     }
 
     public String getEmpSurname() {

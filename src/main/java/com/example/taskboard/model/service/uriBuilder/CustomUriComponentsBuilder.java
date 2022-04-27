@@ -6,6 +6,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.UUID;
 
 @Service
 public class CustomUriComponentsBuilder {
@@ -25,7 +26,7 @@ public class CustomUriComponentsBuilder {
         this.apiVersion = apiVersion;
     }
 
-public URI buildUriRedirectByEntityId(String pathParameterPrefix, Long EntityId){
+public URI buildUriRedirectByEntityId(String pathParameterPrefix, UUID EntityId){
 
     UriComponents builder = UriComponentsBuilder.newInstance()
             .scheme(uriScheme)

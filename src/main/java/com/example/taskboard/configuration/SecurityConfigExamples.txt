@@ -1,0 +1,115 @@
+==========================================================================================================================
+Based on user's role
+==========================================================================================================================
+
+@Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()//cross site request forgery
+                .authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.MANAGER.name(), UserRole.USER.name())
+                .antMatchers(HttpMethod.POST,"/api/v1/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.MANAGER.name(), UserRole.USER.name())
+                .antMatchers(HttpMethod.PUT,"/api/v1/**").hasAnyRole(UserRole.ADMIN.name(), UserRole.MANAGER.name())
+                .antMatchers(HttpMethod.DELETE,"/api/v1/**").hasRole(UserRole.ADMIN.name())
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic();
+    }
+     @Override
+        @Bean
+        protected UserDetailsService userDetailsService() {
+            return new InMemoryUserDetailsManager(
+                    User.builder()
+                            .username("admin")
+                            .password(passwordEncoder().encode("admin"))
+                            .roles(UserRole.ADMIN.name())
+                            .build(),
+                    User.builder()
+                            .username("manager")
+                            .password(passwordEncoder().encode("manager"))
+                            .roles(UserRole.MANAGER.name())
+                            .build(),
+                    User.builder()
+                            .username("user")
+                            .password(passwordEncoder().encode("user"))
+                            .roles(UserRole.USER.name())
+                            .build()
+            );
+        }
+
+
+
+==========================================================================================================================
+Based on user's authority
+==========================================================================================================================
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .csrf().disable()//cross site request forgery
+                .authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/**").hasAuthority(Permission.USER_READ.getPermission())
+                .antMatchers(HttpMethod.POST,"/api/v1/**").hasAuthority(Permission.USER_WRITE.getPermission())
+                .antMatchers(HttpMethod.PUT,"/api/v1/**").hasAuthority(Permission.USER_MODIFY.getPermission())
+                .antMatchers(HttpMethod.DELETE,"/api/v1/**").hasAuthority(Permission.USER_DELETE.getPermission())
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic();
+    }
+
+    @Override
+    @Bean
+    protected UserDetailsService userDetailsService() {
+        return new InMemoryUserDetailsManager(
+                User.builder()
+                        .username("admin")
+                        .password(passwordEncoder().encode("admin"))
+                        .authorities(UserRole.ADMIN.getAuthorities())
+                        .build(),
+                User.builder()
+                        .username("manager")
+                        .password(passwordEncoder().encode("manager"))
+                        .authorities(UserRole.MANAGER.getAuthorities())
+                        .build(),
+                User.builder()
+                        .username("user")
+                        .password(passwordEncoder().encode("user"))
+                        .authorities(UserRole.USER.getAuthorities())
+                        .build()
+        );
+    }
+
+
+==========================================================================================================================
+Custom login+logout pages, session invalidation, global method security
+==========================================================================================================================
+
+    @Configuration
+    @EnableWebSecurity
+    @EnableGlobalMethodSecurity(prePostEnabled = true)//@PreAuthorize("hasAuthority('user:read')")
+    public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .csrf().disable()//cross site request forgery
+                    .authorizeRequests()
+                    .antMatchers("/").permitAll()
+                    .anyRequest()
+                    .authenticated()
+                    .and()
+                    .formLogin()//.httpBasic();
+                    .loginPage("/auth/login").permitAll()
+                    .defaultSuccessUrl("/auth/success")
+                    .and()
+                    .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout", "POST"))
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .deleteCookies("JSESSIONID")
+                    .logoutSuccessUrl("/auth/login");
+        }

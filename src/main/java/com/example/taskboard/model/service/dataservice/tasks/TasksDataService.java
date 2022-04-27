@@ -19,9 +19,11 @@ import com.example.taskboard.repo.TasksRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class TasksDataService implements ITasksDataService {
@@ -48,14 +50,14 @@ public class TasksDataService implements ITasksDataService {
 
     public List<TasksDtoResponse> findAll() {
         List<Tasks> tasksList = tasksRepository.findAll();
-        if (tasksList.size() == 0) throw new DataNotFoundException();
+        if (tasksList.isEmpty()) throw new DataNotFoundException();
         return tasksMapper.TasksListToTasksDtoResponseList(tasksList);
     }
 
     @Override
     public DtoPage<TasksDtoResponse> findAllPageable(Pageable pageable) {
         Page<Tasks> tasksPage = tasksRepository.findAll(pageable);
-        if (tasksPage.getContent().size() == 0) throw new DataNotFoundException();
+        if (tasksPage.getContent().isEmpty()) throw new DataNotFoundException();
         List<TasksDtoResponse> tasksDtoResponseList = tasksMapper.TasksListToTasksDtoResponseList(tasksPage.getContent());
         return new DtoPageBuilder<TasksDtoResponse>()
                 .setContent(tasksDtoResponseList)
@@ -65,45 +67,48 @@ public class TasksDataService implements ITasksDataService {
     }
 
     @Override
-    public TasksDtoResponse findById(Long id) {
+    public TasksDtoResponse findById(UUID id) {
         Optional<Tasks> task = tasksRepository.findById(id);
         return tasksMapper.tasksToTasksDtoResponse(task.orElseThrow(() -> new ElementNotFoundException(id)));
     }
 
     @Override
-    public Tasks findByIdNoConvert(Long id) {
+    public Tasks findByIdNoConvert(UUID id) {
         Optional<Tasks> task = tasksRepository.findById(id);
         return task.orElseThrow(() -> new ElementNotFoundException(id));
     }
 
     @Override
-    public Boolean deleteById(Long id) {
+    @Transactional
+    public Boolean deleteById(UUID id) {
         if (!tasksRepository.existsById(id)) throw new ElementNotFoundException(id);
             tasksRepository.deleteById(id);
             return true;
     }
 
     @Override
-    public TasksDtoResponse create(TasksDtoShortRequest tasksDtoShortRequest, Long taskboardId, Long empExecId, Long empAuthorId) {
+    @Transactional
+    public TasksDtoResponse create(TasksDtoShortRequest tasksDtoShortRequest, UUID taskboardId, UUID empExecId, UUID empAuthorId) {
 
         Tasks task = tasksShortMapper.tasksDtoShortRequestToTasks(tasksDtoShortRequest);
         Employees employeeExec = employeesDataService.findByIdNoConvert(empExecId);
         Employees employeeAuthor = employeesDataService.findByIdNoConvert(empAuthorId);
         Taskboard taskboard = taskboardDataService.findByIdNoConvert(taskboardId);
 
+        task.setTaskId(UUID.randomUUID());
+        task.getReleaseVersion().setRelId(UUID.randomUUID());
         task.setEmpIdExec(employeeExec);
         task.setEmpIdAuthor(employeeAuthor);
         task.setTaskboardId(taskboard);
 
         task = tasksRepository.save(task);
-        if (findById(task.getTaskId()) == null) {
-            throw new TaskNotCreatedException(tasksDtoShortRequest.getTaskName());
-        }
-        return findById(task.getTaskId());
+        task = tasksRepository.findById(task.getTaskId()).orElseThrow(() -> new TaskNotCreatedException(tasksDtoShortRequest.getTaskName()));
+        return tasksMapper.tasksToTasksDtoResponse(task);
     }
 
     @Override
-    public Boolean update(Long id, TasksDtoShortRequest tasksDtoShortRequest) {
+    @Transactional
+    public Boolean update(UUID id, TasksDtoShortRequest tasksDtoShortRequest) {
         Tasks task = findByIdNoConvert(id);
 
         if (tasksDtoShortRequest.getTaskName() != null){

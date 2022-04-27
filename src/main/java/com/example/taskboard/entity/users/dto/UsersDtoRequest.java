@@ -1,39 +1,44 @@
 package com.example.taskboard.entity.users.dto;
 
 import com.example.taskboard.entity.classifier.UserRole;
+import com.example.taskboard.entity.classifier.UserStatus;
+
+import java.util.UUID;
 
 public class UsersDtoRequest {
 
-    private Long userId;
+    private UUID userId;
     private UserRole userRole;
     private String userLogin;
     private String userPasswd;
     private String userPasswd2;
-    private String userMark;
+    private UserStatus userStatus;
 
     public UsersDtoRequest() {
     }
 
-    public UsersDtoRequest(UserRole userRole, String userLogin, String userPasswd, String userPasswd2) {
-        this.userRole = userRole;
-        this.userLogin = userLogin;
-        this.userPasswd = userPasswd;
-        this.userPasswd2 = userPasswd2;
-    }
-
-    public UsersDtoRequest(Long userId, UserRole userRole, String userLogin, String userPasswd, String userPasswd2) {
+    public UsersDtoRequest(UUID userId, UserRole userRole, String userLogin, String userPasswd, String userPasswd2, UserStatus userStatus) {
         this.userId = userId;
         this.userRole = userRole;
         this.userLogin = userLogin;
         this.userPasswd = userPasswd;
         this.userPasswd2 = userPasswd2;
+        this.userStatus = userStatus;
     }
 
-    public Long getUserId() {
+    public UsersDtoRequest(UserRole userRole, String userLogin, String userPasswd, String userPasswd2, UserStatus userStatus) {
+        this.userRole = userRole;
+        this.userLogin = userLogin;
+        this.userPasswd = userPasswd;
+        this.userPasswd2 = userPasswd2;
+        this.userStatus = userStatus;
+    }
+
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
@@ -69,12 +74,12 @@ public class UsersDtoRequest {
         this.userPasswd2 = userPasswd2;
     }
 
-    public String getUserMark() {
-        return userMark;
+    public UserStatus getUserStatus() {
+        return userStatus;
     }
 
-    public void setUserMark(String userMark) {
-        this.userMark = userMark;
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 
     @Override

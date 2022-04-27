@@ -8,17 +8,18 @@ import com.example.taskboard.model.dtoPageBuilder.DtoPage;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface IEmployeesDataService {
     List<EmployeesDtoResponse> findAll();
     DtoPage<EmployeesDtoResponse> findAllPageable(Pageable pageable);
-    EmployeesDtoResponse findById(Long id);
-    Employees findByIdNoConvert(Long id);
+    EmployeesDtoResponse findById(UUID id);
+    Employees findByIdNoConvert(UUID id);
     EmployeesDtoResponse findEmployeesByFullName(String empSurname, String empName, String empMidname);
-    Boolean deleteById(Long id);
+    Boolean deleteById(UUID id);
     EmployeesDtoResponse create(EmployeesDtoRequest employeesDtoRequest);
-    EmployeesDtoResponse createEmpIfUserExist(Long userId, EmployeesDtoShortRequest employeesDtoShortRequest);
-    Boolean updateUser(Long empid, Long userId);
-    Boolean update(Long id, EmployeesDtoRequest employeesDtoRequest);
+    EmployeesDtoResponse createEmpIfUserExist(UUID userId, EmployeesDtoShortRequest employeesDtoShortRequest);
+    Boolean updateUser(UUID empid, UUID userId);
+    Boolean update(UUID id, EmployeesDtoRequest employeesDtoRequest);
 }
 

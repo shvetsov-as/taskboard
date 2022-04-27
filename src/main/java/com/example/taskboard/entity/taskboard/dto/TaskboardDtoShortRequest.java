@@ -1,15 +1,12 @@
 package com.example.taskboard.entity.taskboard.dto;
 
 import com.example.taskboard.entity.classifier.Status;
-import com.example.taskboard.entity.release.dto.ReleaseDtoRequest;
 import com.sun.istack.NotNull;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
-public class TaskboardDtoRequest {
+public class TaskboardDtoShortRequest {
 
     private UUID taskboardId;
     @NotNull
@@ -20,29 +17,17 @@ public class TaskboardDtoRequest {
     private Date projectStartDate;
     @NotNull
     private Status projectStatus;
-    private List<ReleaseDtoRequest> listRelease = new ArrayList<>();
 
-    public TaskboardDtoRequest() {
+    public TaskboardDtoShortRequest() {
     }
 
-    public TaskboardDtoRequest(String taskboardName, String projectName,
-                               Date projectStartDate, Status projectStatus) {
+    public TaskboardDtoShortRequest(String taskboardName, String projectName,
+                                    Date projectStartDate, Status projectStatus) {
         this.taskboardName = taskboardName;
         this.projectName = projectName;
         this.projectStartDate = projectStartDate;
         this.projectStatus = projectStatus;
     }
-
-    public TaskboardDtoRequest(String taskboardName, String projectName,
-                               Date projectStartDate, Status projectStatus,
-                               @NotNull List<ReleaseDtoRequest> listRelease) {
-        this.taskboardName = taskboardName;
-        this.projectName = projectName;
-        this.projectStartDate = projectStartDate;
-        this.projectStatus = projectStatus;
-        this.listRelease = listRelease;
-    }
-
 
     public UUID getTaskboardId() {
         return taskboardId;
@@ -84,20 +69,12 @@ public class TaskboardDtoRequest {
         this.projectStatus = projectStatus;
     }
 
-    public List<ReleaseDtoRequest> getListRelease() {
-        return listRelease;
-    }
-
-    public void setListRelease(List<ReleaseDtoRequest> listRelease) {
-        this.listRelease = listRelease;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TaskboardDtoRequest)) return false;
+        if (!(o instanceof TaskboardDtoShortRequest)) return false;
 
-        TaskboardDtoRequest that = (TaskboardDtoRequest) o;
+        TaskboardDtoShortRequest that = (TaskboardDtoShortRequest) o;
 
         if (!getTaskboardName().equals(that.getTaskboardName())) return false;
         if (!getProjectName().equals(that.getProjectName())) return false;

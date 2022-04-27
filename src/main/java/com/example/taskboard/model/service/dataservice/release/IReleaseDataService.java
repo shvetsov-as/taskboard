@@ -7,13 +7,14 @@ import com.example.taskboard.model.dtoPageBuilder.DtoPage;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface IReleaseDataService {
     List<ReleaseDtoResponse> findAll();
     DtoPage<ReleaseDtoResponse> findAllPageable(Pageable pageable);
-    ReleaseDtoResponse findById(Long id);
-    Release findByIdNoConvert(Long id);
-    Boolean deleteById(Long id);
+    ReleaseDtoResponse findById(UUID id);
+    Release findByIdNoConvert(UUID id);
+    Boolean deleteById(UUID id);
     ReleaseDtoResponse create(ReleaseDtoRequest releaseDtoRequest);
-    Boolean update(Long id, ReleaseDtoRequest releaseDtoRequest);
+    Boolean update(UUID id, ReleaseDtoRequest releaseDtoRequest);
 }

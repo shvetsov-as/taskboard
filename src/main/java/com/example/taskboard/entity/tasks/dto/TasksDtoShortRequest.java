@@ -4,9 +4,11 @@ import com.example.taskboard.entity.classifier.Status;
 import com.example.taskboard.entity.release.dto.ReleaseDtoRequest;
 import com.sun.istack.NotNull;
 
+import java.util.UUID;
+
 public class TasksDtoShortRequest {
 
-    private Long taskId;
+    private UUID taskId;
     @NotNull
     private String taskName;
     @NotNull
@@ -26,11 +28,11 @@ public class TasksDtoShortRequest {
         this.releaseVersion = releaseVersion;
     }
 
-    public Long getTaskId() {
+    public UUID getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(Long taskId) {
+    public void setTaskId(UUID taskId) {
         this.taskId = taskId;
     }
 
