@@ -1,8 +1,5 @@
-package com.example.taskboard.model.service.passwordManager;
+package com.example.taskboard.model.security.passwordManager.passwdInputCheck;
 
-import org.springframework.stereotype.Service;
-
-@Service
 public final class PasswdCheck {
 
     private static final int PWD_LEN = 8;
@@ -21,11 +18,11 @@ public final class PasswdCheck {
 
     public boolean passwdCheck(String password) {
 
-        if (password.trim().equals("") || password.isEmpty() || password.trim().length() < PWD_LEN) {
+        password = password.trim().replaceAll(" ", "");
+
+        if (password.length() < PWD_LEN) {
             return false;
         }
-
-        password = password.trim();
 
         for (int i = 0; i < password.length(); i++) {
             ch = password.charAt(i);

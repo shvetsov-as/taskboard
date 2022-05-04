@@ -17,9 +17,9 @@ import java.util.List;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${server.scheme}") String currentScheme;
-    @Value("${server.host}") String currentHost;
-    @Value("${server.port}") String currentPort;
+    @Value("${server.scheme}") private String currentScheme;
+    @Value("${server.host}") private String currentHost;
+    @Value("${server.port}") private String currentPort;
 
     @Bean
     public OpenAPI openAPI() {

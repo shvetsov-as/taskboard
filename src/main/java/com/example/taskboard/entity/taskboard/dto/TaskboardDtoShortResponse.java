@@ -3,10 +3,11 @@ package com.example.taskboard.entity.taskboard.dto;
 import com.example.taskboard.entity.classifier.Status;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class TaskboardDtoShortResponse {
 
-    private Long taskboardId;
+    private UUID taskboardId;
     private String taskboardName;
     private String projectName;
     private Date projectStartDate;
@@ -15,7 +16,7 @@ public class TaskboardDtoShortResponse {
     public TaskboardDtoShortResponse() {
     }
 
-    public TaskboardDtoShortResponse(Long taskboardId, String taskboardName, String projectName, Date projectStartDate,
+    public TaskboardDtoShortResponse(UUID taskboardId, String taskboardName, String projectName, Date projectStartDate,
                                      Status projectStatus) {
         this.taskboardId = taskboardId;
         this.taskboardName = taskboardName;
@@ -24,11 +25,11 @@ public class TaskboardDtoShortResponse {
         this.projectStatus = projectStatus;
     }
 
-    public Long getTaskboardId() {
+    public UUID getTaskboardId() {
         return taskboardId;
     }
 
-    public void setTaskboardId(Long taskboardId) {
+    public void setTaskboardId(UUID taskboardId) {
         this.taskboardId = taskboardId;
     }
 

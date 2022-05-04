@@ -2,9 +2,11 @@ package com.example.taskboard.entity.employees.dto;
 
 import com.example.taskboard.entity.users.dto.UsersDtoRequest;
 
+import java.util.UUID;
+
 public class EmployeesDtoRequest {
 
-    private Long empId;
+    private UUID empId;
     private String empSurname;
     private String empName;
     private String empMidname;
@@ -20,7 +22,7 @@ public class EmployeesDtoRequest {
         this.user = user;
     }
 
-    public EmployeesDtoRequest(Long empId, String empSurname, String empName, String empMidname, UsersDtoRequest user) {
+    public EmployeesDtoRequest(UUID empId, String empSurname, String empName, String empMidname, UsersDtoRequest user) {
         this.empId = empId;
         this.empSurname = empSurname;
         this.empName = empName;

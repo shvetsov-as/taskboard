@@ -1,26 +1,32 @@
 package com.example.taskboard.entity.users.dto;
+
 import com.example.taskboard.entity.classifier.UserRole;
+import com.example.taskboard.entity.classifier.UserStatus;
+
+import java.util.UUID;
 
 public class UsersDtoResponse {
 
-    private Long userId;
+    private UUID userId;
     private UserRole userRole;
     private String userLogin;
+    private UserStatus userStatus;
 
     public UsersDtoResponse() {
     }
 
-    public UsersDtoResponse(Long userId, UserRole userRole, String userLogin) {
+    public UsersDtoResponse(UUID userId, UserRole userRole, String userLogin, UserStatus userStatus) {
         this.userId = userId;
         this.userRole = userRole;
         this.userLogin = userLogin;
+        this.userStatus = userStatus;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
@@ -38,6 +44,14 @@ public class UsersDtoResponse {
 
     public void setUserLogin(String userLogin) {
         this.userLogin = userLogin;
+    }
+
+    public UserStatus getUserStatus() {
+        return userStatus;
+    }
+
+    public void setUserStatus(UserStatus userStatus) {
+        this.userStatus = userStatus;
     }
 
     @Override

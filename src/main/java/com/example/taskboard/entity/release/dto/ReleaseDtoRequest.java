@@ -3,10 +3,11 @@ package com.example.taskboard.entity.release.dto;
 import com.sun.istack.NotNull;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class ReleaseDtoRequest {
 
-    private Long relId;
+    private UUID relId;
     @NotNull
     private Integer relVersion;
     @NotNull
@@ -23,11 +24,11 @@ public class ReleaseDtoRequest {
         this.relDateTo = relDateTo;
     }
 
-    public Long getRelId() {
+    public UUID getRelId() {
         return relId;
     }
 
-    public void setRelId(Long relId) {
+    public void setRelId(UUID relId) {
         this.relId = relId;
     }
 

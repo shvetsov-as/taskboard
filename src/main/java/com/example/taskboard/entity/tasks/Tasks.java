@@ -11,33 +11,22 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @Entity
 @Table(name = "tasks")
 public class Tasks {
 
     @Id
-    @SequenceGenerator(
-            name = "tasks_sequence",
-            sequenceName = "tasks_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "tasks_sequence"
-    )
     @Column(name = "task_id", nullable = false)
     @NotNull
-    private Long taskId;
+    private UUID taskId;
 
     @Column(name = "task_name", nullable = false)
     @NotNull
@@ -78,7 +67,9 @@ public class Tasks {
         this.releaseVersion = releaseVersion;
     }
 
-    public Tasks(String taskName, String taskToDo, Status taskStatus, Taskboard taskboardId, Employees empIdExec, Employees empIdAuthor, Release releaseVersion) {
+    public Tasks(UUID taskId, String taskName, String taskToDo, Status taskStatus,
+                 Taskboard taskboardId, Employees empIdExec, Employees empIdAuthor, Release releaseVersion) {
+        this.taskId = taskId;
         this.taskName = taskName;
         this.taskToDo = taskToDo;
         this.taskStatus = taskStatus;
@@ -88,8 +79,12 @@ public class Tasks {
         this.releaseVersion = releaseVersion;
     }
 
-    public Long getTaskId() {
+    public UUID getTaskId() {
         return taskId;
+    }
+
+    public void setTaskId(UUID taskId) {
+        this.taskId = taskId;
     }
 
     public String getTaskName() {

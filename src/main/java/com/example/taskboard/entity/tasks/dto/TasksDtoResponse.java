@@ -5,9 +5,11 @@ import com.example.taskboard.entity.employees.dto.EmployeesDtoShortResponse;
 import com.example.taskboard.entity.release.dto.ReleaseDtoResponse;
 import com.example.taskboard.entity.taskboard.dto.TaskboardDtoShortResponse;
 
+import java.util.UUID;
+
 public class TasksDtoResponse {
 
-    private Long taskId;
+    private UUID taskId;
     private String taskName;
     private String taskToDo;
     private Status taskStatus;
@@ -19,14 +21,14 @@ public class TasksDtoResponse {
     public TasksDtoResponse() {
     }
 
-    public TasksDtoResponse(Long taskId, String taskName, String taskToDo, Status taskStatus) {
+    public TasksDtoResponse(UUID taskId, String taskName, String taskToDo, Status taskStatus) {
         this.taskId = taskId;
         this.taskName = taskName;
         this.taskToDo = taskToDo;
         this.taskStatus = taskStatus;
     }
 
-    public TasksDtoResponse(Long taskId, String taskName, String taskToDo, Status taskStatus,
+    public TasksDtoResponse(UUID taskId, String taskName, String taskToDo, Status taskStatus,
                             TaskboardDtoShortResponse taskboardId, EmployeesDtoShortResponse empIdExec,
                             EmployeesDtoShortResponse empIdAuthor, ReleaseDtoResponse releaseVersion) {
         this.taskId = taskId;
@@ -39,11 +41,11 @@ public class TasksDtoResponse {
         this.releaseVersion = releaseVersion;
     }
 
-    public Long getTaskId() {
+    public UUID getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(Long taskId) {
+    public void setTaskId(UUID taskId) {
         this.taskId = taskId;
     }
 

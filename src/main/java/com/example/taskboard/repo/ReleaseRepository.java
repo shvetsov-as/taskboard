@@ -6,7 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.validation.constraints.NotNull;
+import java.util.UUID;
+
 @Repository
-public interface ReleaseRepository extends JpaRepository<Release, Long> {
-    Page<Release> findAll (Pageable pageable);
+public interface ReleaseRepository extends JpaRepository<Release, UUID> {
+    Page<Release> findAll (@NotNull Pageable pageable);
 }

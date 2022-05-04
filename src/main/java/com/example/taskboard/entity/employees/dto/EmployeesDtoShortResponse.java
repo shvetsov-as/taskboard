@@ -1,8 +1,10 @@
 package com.example.taskboard.entity.employees.dto;
 
+import java.util.UUID;
+
 public class EmployeesDtoShortResponse {
 
-    private Long empId;
+    private UUID empId;
     private String empSurname;
     private String empName;
     private String empMidname;
@@ -10,18 +12,18 @@ public class EmployeesDtoShortResponse {
     public EmployeesDtoShortResponse() {
     }
 
-    public EmployeesDtoShortResponse(Long empId, String empSurname, String empName, String empMidname) {
+    public EmployeesDtoShortResponse(UUID empId, String empSurname, String empName, String empMidname) {
         this.empId = empId;
         this.empSurname = empSurname;
         this.empName = empName;
         this.empMidname = empMidname;
     }
 
-    public Long getEmpId() {
+    public UUID getEmpId() {
         return empId;
     }
 
-    public void setEmpId(Long empId) {
+    public void setEmpId(UUID empId) {
         this.empId = empId;
     }
 

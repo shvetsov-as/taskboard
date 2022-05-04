@@ -2,9 +2,11 @@ package com.example.taskboard.entity.employees.dto;
 
 import com.sun.istack.NotNull;
 
+import java.util.UUID;
+
 public class EmployeesDtoShortRequest {
 
-    private Long empId;
+    private UUID empId;
     @NotNull
     private String empSurname;
     @NotNull
@@ -21,11 +23,11 @@ public class EmployeesDtoShortRequest {
         this.empMidname = empMidname;
     }
 
-    public void setEmpId(Long empId) {
+    public void setEmpId(UUID empId) {
         this.empId = empId;
     }
 
-    public Long getEmpId() {
+    public UUID getEmpId() {
         return empId;
     }
 

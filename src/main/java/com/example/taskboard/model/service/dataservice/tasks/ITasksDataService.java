@@ -7,13 +7,14 @@ import com.example.taskboard.model.dtoPageBuilder.DtoPage;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ITasksDataService {
     List<TasksDtoResponse> findAll();
     DtoPage<TasksDtoResponse> findAllPageable(Pageable pageable);
-    TasksDtoResponse findById(Long id);
-    Tasks findByIdNoConvert(Long id);
-    Boolean deleteById(Long id);
-    TasksDtoResponse create(TasksDtoShortRequest tasksDtoShortRequest, Long taskboardId, Long empExecId, Long empAuthorId);
-    Boolean update(Long id, TasksDtoShortRequest tasksDtoShortRequest);
+    TasksDtoResponse findById(UUID id);
+    Tasks findByIdNoConvert(UUID id);
+    Boolean deleteById(UUID id);
+    TasksDtoResponse create(TasksDtoShortRequest tasksDtoShortRequest, UUID taskboardId, UUID empExecId, UUID empAuthorId);
+    Boolean update(UUID id, TasksDtoShortRequest tasksDtoShortRequest);
 }

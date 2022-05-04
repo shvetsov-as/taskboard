@@ -2,13 +2,11 @@ package com.example.taskboard.entity.release;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.UUID;
 
 
 @Entity
@@ -16,18 +14,9 @@ import java.util.Date;
 public class Release {
 
     @Id
-    @SequenceGenerator(
-            name = "release_sequence",
-            sequenceName = "release_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "release_sequence"
-    )
     @Column(name = "rel_id", nullable = false)
     @NotNull
-    private Long relId;
+    private UUID relId;
 
     @Column(name = "rel_version", nullable = false)
     @NotNull
@@ -50,8 +39,12 @@ public class Release {
         this.relDateTo = relDateTo;
     }
 
-    public Long getRelId() {
+    public UUID getRelId() {
         return relId;
+    }
+
+    public void setRelId(UUID relId) {
+        this.relId = relId;
     }
 
     public Integer getRelVersion() {

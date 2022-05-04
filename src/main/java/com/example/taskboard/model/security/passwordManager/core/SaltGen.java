@@ -1,10 +1,7 @@
-package com.example.taskboard.model.service.passwordManager.core;
-
-import org.springframework.stereotype.Service;
+package com.example.taskboard.model.security.passwordManager.core;
 
 import java.util.Random;
 
-@Service
 public final class SaltGen {
 
     private static final int SALT_LEN = 10;
@@ -20,7 +17,7 @@ public final class SaltGen {
     private StringBuilder saltBuilder = new StringBuilder();
 
 
-    public String saltGenerated() {
+    public String generateSalt() {
         for (int i = 0; i < SALT_LEN; i++) {
             do {
                 ch = (char) random.nextInt(123);
