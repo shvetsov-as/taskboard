@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="1650625426828-1" author="User (generated)">
+        <createTable tableName="employees">
+            <column name="emp_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_employees"/>
+            </column>
+            <column name="emp_surname" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="emp_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="emp_midname" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id_users" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650625426828-2" author="User (generated)">
+        <createTable tableName="release">
+            <column name="rel_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_release"/>
+            </column>
+            <column name="rel_version" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rel_date_from" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rel_date_to" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="taskboard_id_taskboard" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650625426828-3" author="User (generated)">
+        <createTable tableName="taskboard">
+            <column name="taskboard_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_taskboard"/>
+            </column>
+            <column name="taskboard_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_start_date" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650625426828-4" author="User (generated)">
+        <createTable tableName="tasks">
+            <column name="task_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_tasks"/>
+            </column>
+            <column name="task_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="task_todo" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="task_status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="taskboard_id_taskboard" type="UUID"/>
+            <column name="emp_id_employees_exec" type="UUID"/>
+            <column name="emp_id_employees_author" type="UUID"/>
+            <column name="rel_id_release" type="UUID"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650625426828-5" author="User (generated)">
+        <createTable tableName="users">
+            <column name="user_id" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
+            </column>
+            <column name="user_role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_status" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_login" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_passwd" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_mark" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1650625426828-6" author="User (generated)">
+        <addUniqueConstraint columnNames="project_name" constraintName="uc_taskboard_project_name"
+                             tableName="taskboard"/>
+    </changeSet>
+    <changeSet id="1650625426828-7" author="User (generated)">
+        <addUniqueConstraint columnNames="taskboard_name" constraintName="uc_taskboard_taskboard_name"
+                             tableName="taskboard"/>
+    </changeSet>
+    <changeSet id="1650625426828-8" author="User (generated)">
+        <addUniqueConstraint columnNames="user_login" constraintName="uc_users_user_login" tableName="users"/>
+    </changeSet>
+    <changeSet id="1650625426828-9" author="User (generated)">
+        <addForeignKeyConstraint baseColumnNames="user_id_users" baseTableName="employees"
+                                 constraintName="FK_EMPLOYEES_ON_USER_ID_USERS" referencedColumnNames="user_id"
+                                 referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="1650625426828-10" author="User (generated)">
+        <addForeignKeyConstraint baseColumnNames="taskboard_id_taskboard" baseTableName="release"
+                                 constraintName="FK_RELEASE_ON_TASKBOARD_ID_TASKBOARD"
+                                 referencedColumnNames="taskboard_id" referencedTableName="taskboard"/>
+    </changeSet>
+    <changeSet id="1650625426828-11" author="User (generated)">
+        <addForeignKeyConstraint baseColumnNames="emp_id_employees_author" baseTableName="tasks"
+                                 constraintName="FK_TASKS_ON_EMP_ID_EMPLOYEES_AUTHOR" referencedColumnNames="emp_id"
+                                 referencedTableName="employees"/>
+    </changeSet>
+    <changeSet id="1650625426828-12" author="User (generated)">
+        <addForeignKeyConstraint baseColumnNames="emp_id_employees_exec" baseTableName="tasks"
+                                 constraintName="FK_TASKS_ON_EMP_ID_EMPLOYEES_EXEC" referencedColumnNames="emp_id"
+                                 referencedTableName="employees"/>
+    </changeSet>
+    <changeSet id="1650625426828-13" author="User (generated)">
+        <addForeignKeyConstraint baseColumnNames="rel_id_release" baseTableName="tasks"
+                                 constraintName="FK_TASKS_ON_REL_ID_RELEASE" referencedColumnNames="rel_id"
+                                 referencedTableName="release"/>
+    </changeSet>
+    <changeSet id="1650625426828-14" author="User (generated)">
+        <addForeignKeyConstraint baseColumnNames="taskboard_id_taskboard" baseTableName="tasks"
+                                 constraintName="FK_TASKS_ON_TASKBOARD_ID_TASKBOARD"
+                                 referencedColumnNames="taskboard_id" referencedTableName="taskboard"/>
+    </changeSet>
+    <changeSet id="1650625426828-15" author="User (generated)">
+        <dropSequence sequenceName="employees_sequence"/>
+    </changeSet>
+    <changeSet id="1650625426828-16" author="User (generated)">
+        <dropSequence sequenceName="release_sequence"/>
+    </changeSet>
+    <changeSet id="1650625426828-17" author="User (generated)">
+        <dropSequence sequenceName="taskboard_sequence"/>
+    </changeSet>
+    <changeSet id="1650625426828-18" author="User (generated)">
+        <dropSequence sequenceName="tasks_sequence"/>
+    </changeSet>
+    <changeSet id="1650625426828-19" author="User (generated)">
+        <dropSequence sequenceName="users_sequence"/>
+    </changeSet>
+</databaseChangeLog>
