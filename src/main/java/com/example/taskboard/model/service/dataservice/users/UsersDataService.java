@@ -6,7 +6,6 @@ import com.example.taskboard.entity.users.dto.UsersDtoResponse;
 import com.example.taskboard.entity.users.mapper.UsersMapper;
 import com.example.taskboard.model.dataexeptions.DataNotFoundException;
 import com.example.taskboard.model.dataexeptions.ElementNotFoundException;
-import com.example.taskboard.model.dataexeptions.UserNotCreatedException;
 import com.example.taskboard.model.dataexeptions.UserNotFoundException;
 import com.example.taskboard.model.dtoPageBuilder.DtoPage;
 import com.example.taskboard.model.dtoPageBuilder.DtoPageBuilder;
@@ -96,17 +95,32 @@ public class UsersDataService implements IUsersDataService {
                                usersDtoRequest.getUserLogin(), hash, salt);
 
         user.setUserId(UUID.randomUUID());
-        usersRepository.save(user);
+        //usersRepository.save(user);
 
-        usersRepository.findUsersByUserLogin(user.getUserLogin())
-                .orElseThrow(() -> new UserNotCreatedException(user.getUserLogin()));
+//        usersRepository.findUsersByUserLogin(user.getUserLogin())
+//                .orElseThrow(() -> new UserNotCreatedException(user.getUserLogin()));
 
-        return findById(user.getUserId());
+        return usersMapper.usersToUsersDtoResponse(usersRepository.save(user));
     }
 
     private String[] getHashSalt(UsersDtoRequest usersDtoRequest) {
         String hashSalt = hashSaltCollector.collect(usersDtoRequest.getUserPasswd());
         return hashSaltParser.parse(hashSalt);
+    }
+
+    public UsersDtoResponse create(UsersDtoRequest usersDtoRequest, UUID id) {
+        inputCheck.fullCheck(usersDtoRequest);
+
+        String[] hashSalt = getHashSalt(usersDtoRequest);
+        String hash = hashSalt[0];
+        String salt = hashSalt[1];
+
+        Users user = new Users(usersDtoRequest.getUserRole(), usersDtoRequest.getUserStatus(),
+                usersDtoRequest.getUserLogin(), hash, salt);
+
+        user.setUserId(id);
+
+        return usersMapper.usersToUsersDtoResponse(usersRepository.save(user));
     }
 
     @Override
