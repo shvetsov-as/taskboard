@@ -36,11 +36,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()//cross site request forgery
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/api/v1/users").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
-                .httpBasic();
+                .httpBasic(); ///api/v1/users/{id}
     }
 
     @Override

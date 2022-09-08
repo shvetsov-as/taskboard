@@ -15,6 +15,13 @@
     <name>taskboard</name>
     <description>Demo taskboard project</description>
 
+    <!--<repositories>
+        <repository>
+            <id>javax.wsdl</id>
+            <url>http://maven.geomajas.org/</url>
+        </repository>
+    </repositories>-->
+
     <properties>
         <java.version>11</java.version>
         <liquibase.version>4.10.0</liquibase.version>
