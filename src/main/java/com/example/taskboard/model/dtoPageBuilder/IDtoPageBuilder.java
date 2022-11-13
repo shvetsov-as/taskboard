@@ -7,6 +7,6 @@ public interface IDtoPageBuilder <T>{
     IDtoPageBuilder <T> setContent(List<T> content);
     IDtoPageBuilder <T> setTotalPages(Integer totalPages);
     IDtoPageBuilder <T> setTotalElements(Long totalElements);
-    DtoPage build();
+    DtoPage <T> build();
 }
 
